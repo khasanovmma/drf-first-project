@@ -1,9 +1,10 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from man.views import ManViewSet
 
-from man.views import ManAPIListView, ManAPIUpdateView,ManAPIDetailView
+router = routers.SimpleRouter()
+router.register('man', ManViewSet)
 
 urlpatterns = [
-    path('manlist/', ManAPIListView.as_view()),
-    path('update/<int:pk>/', ManAPIUpdateView.as_view()),
-    path('detail/<int:pk>/', ManAPIDetailView.as_view())
+    path('', include(router.urls)), # http://127.0.0.1:8000/api/v1/man/
 ]
