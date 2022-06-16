@@ -1,31 +1,9 @@
-import io
-
 from rest_framework import serializers
-from rest_framework.parsers import JSONParser
-from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 
 from man.models import Man
-# # 1
-# class ManSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Man
-#         fields = ('full_name', 'category')
 
-# # 3
-# class ManModel:
-#     def __init__(self, title, content):
-#         self.title = title
-#         self.content = content
-
-
-
-
-# # # 3
-# class ManSerializer(serializers.Serializer):
-#     title = serializers.CharField(max_length=255)
-#     content = serializers.CharField()
-
-# # 3
+# 4
 class ManSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=255)
     content = serializers.CharField()
@@ -34,18 +12,16 @@ class ManSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     category_id = serializers.IntegerField()
 
-# # 3
-# def encode():
-#     model = ManModel('Denzel Washington',
-#                      'Content: American actor celebrated for his engaging and powerful performances.')
-#     model_sr = ManSerializer(model)
-#     print(model_sr.data, type(model_sr.data))
-#     json = JSONRenderer().render(model_sr.data)
-#     print(json)
-#
-# def decode():
-#     stream = io.BytesIO(b'{"title":"Denzel Washington","content":"Content: American actor celebrated for his engaging and powerful performances."}')
-#     data = JSONParser().parse(stream)
-#     serializer = ManSerializer(data=data)
-#     serializer.is_valid()
-#     print(serializer.validated_data)
+    def create(self, validated_data):
+        return Man.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.full_name = validated_data.get("full_name", instance.full_name)
+        instance.content = validated_data.get('content', instance.content)
+        instance.created_at = validated_data.get('created_at', instance.created_at)
+        instance.updated_at = validated_data.get('updated_at', instance.updated_at)
+        instance.is_published = validated_data.get('is_published', instance.is_published)
+        instance.category_id = validated_data.get('category_id', instance.category_id)
+        instance.save()
+
+        return instance
