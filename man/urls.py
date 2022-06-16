@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
-from man.views import ManViewSet
+from man.views import ManAPIListView, ManAPIUpdateView, ManAPIDestroyView
 
-router = routers.DefaultRouter()
-router.register('man', ManViewSet)  # param: basename -> name url
 
 urlpatterns = [
-    path('', include(router.urls)),  # http://127.0.0.1:8000/api/v1/man/
+    path('man/', ManAPIListView.as_view()),
+    path('man/<int:pk>/', ManAPIUpdateView.as_view()),
+    path('man-delete/<int:pk>/', ManAPIDestroyView.as_view()),
 ]

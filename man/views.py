@@ -1,16 +1,22 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from man.models import Man, Category
+from man.permissions import IsAdminOrReadOnly
 from man.serializer import ManSerializer
 
 
-class ManViewSet(viewsets.ModelViewSet):
+class ManAPIListView(generics.ListCreateAPIView):
+    queryset = Man.objects.all()
+    serializer_class = ManSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class ManAPIUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Man.objects.all()
     serializer_class = ManSerializer
 
-    @action(methods=['get'], detail=False)
-    def category(self, request):
-        categories = Category.objects.all()
-        return Response({'categorY_list': [category.title for category in categories ]})
+
+class ManAPIDestroyView(generics.RetrieveDestroyAPIView):
+    queryset = Man.objects.all()
+    serializer_class = ManSerializer
+    permission_classes = (IsAdminOrReadOnly, )
