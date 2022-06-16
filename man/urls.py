@@ -1,8 +1,9 @@
 from django.urls import path
 
-from man.views import ManAPIList
+from man.views import ManAPIListView, ManAPIUpdateView,ManAPIDetailView
 
 urlpatterns = [
-    path('manlist/', ManAPIList.as_view()),
-    path('manlist/<int:pk>/', ManAPIList.as_view())
+    path('manlist/', ManAPIListView.as_view()),
+    path('update/<int:pk>/', ManAPIUpdateView.as_view()),
+    path('detail/<int:pk>/', ManAPIDetailView.as_view())
 ]
